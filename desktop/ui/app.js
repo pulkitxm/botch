@@ -217,10 +217,11 @@ $("handle").addEventListener("pointerdown", (event) => {
   handle.addEventListener("pointerup", stop);
 });
 
-listen("state", (event) => {
-  current = event.payload;
-  if (!current.expanded) settingsOpen = false;
-  render();
-});
-listen("open-settings", () => toggleSettings(true));
-invoke("state");
+Promise.all([
+  listen("state", (event) => {
+    current = event.payload;
+    if (!current.expanded) settingsOpen = false;
+    render();
+  }),
+  listen("open-settings", () => toggleSettings(true)),
+]).then(() => invoke("state"));
