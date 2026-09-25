@@ -69,7 +69,7 @@ pub fn decrypt(
 }
 
 fn decrypt_cbc(key: &[u8; 16], body: &[u8]) -> Option<Vec<u8>> {
-    if body.is_empty() || body.len() % 16 != 0 {
+    if body.is_empty() || !body.len().is_multiple_of(16) {
         return None;
     }
     cbc::Decryptor::<aes::Aes128>::new(key.into(), &CBC_IV.into())

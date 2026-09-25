@@ -684,7 +684,7 @@ fn import_cookies(
         let remaining = Rc::new(Cell::new(cookies.len()));
         let targets = Rc::new(Cell::new(Some(targets)));
         for cookie in cookies {
-            let mut soup_cookie = soup3::Cookie::new(
+            let mut soup_cookie = soup::Cookie::new(
                 &cookie.name,
                 &cookie.value,
                 &cookie.host,
@@ -704,9 +704,9 @@ fn import_cookies(
             soup_cookie.set_secure(cookie.secure);
             soup_cookie.set_http_only(cookie.http_only);
             let policy = match cookie.same_site {
-                SameSite::None => Some(soup3::SameSitePolicy::None),
-                SameSite::Lax => Some(soup3::SameSitePolicy::Lax),
-                SameSite::Strict => Some(soup3::SameSitePolicy::Strict),
+                SameSite::None => Some(soup::SameSitePolicy::None),
+                SameSite::Lax => Some(soup::SameSitePolicy::Lax),
+                SameSite::Strict => Some(soup::SameSitePolicy::Strict),
                 SameSite::Unspecified => None,
             };
             if let Some(policy) = policy {
