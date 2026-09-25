@@ -50,5 +50,7 @@ export function checkFiles(files) {
 }
 
 if (import.meta.main) {
-  report("check-workflows", checkFiles(trackedFiles().filter((file) => /^\.github\/workflows\/[^/]+\.ya?ml$/.test(file))));
+  const requested = process.argv.slice(2);
+  const files = requested.length ? requested : trackedFiles().filter((file) => /^\.github\/workflows\/[^/]+\.ya?ml$/.test(file));
+  report("check-workflows", checkFiles(files));
 }

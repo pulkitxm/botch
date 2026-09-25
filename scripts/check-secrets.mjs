@@ -8,7 +8,7 @@ export const RULES = [
   { name: "github fine-grained token", re: /\bgithub_pat_[A-Za-z0-9_]{70,}\b/g },
   { name: "aws access key", re: /\b(AKIA|ASIA)[A-Z0-9]{16}\b/g },
   { name: "slack token", re: /\bxox[abpr]-[A-Za-z0-9-]{10,}\b/g },
-  { name: "openai style key", re: /\bsk-(proj-|ant-)?[A-Za-z0-9_-]{32,}\b/g },
+  { name: "sk-prefixed api key", re: /\bsk-(proj-|ant-)?[A-Za-z0-9_-]{32,}\b/g },
   { name: "google api key", re: /\bAIza[0-9A-Za-z_-]{35}\b/g },
   { name: "stripe key", re: /\b(sk|rk)_(live|test)_[A-Za-z0-9]{24,}\b/g },
   { name: "npm token", re: /\bnpm_[A-Za-z0-9]{36}\b/g },
