@@ -20,6 +20,18 @@ export function readText(file) {
   return bytes.toString("utf8");
 }
 
+export function commitMessages(range, cwd = process.cwd()) {
+  const log = execSync(`git log --format=%H%x1f%B%x1e ${range}`, { cwd, encoding: "utf8" });
+  return log
+    .split("\x1e")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const [sha, ...body] = entry.split("\x1f");
+      return { sha: sha.slice(0, 12), message: body.join("\x1f") };
+    });
+}
+
 export function lineOf(text, pos) {
   let line = 1;
   for (let i = 0; i < pos && i < text.length; i++) if (text[i] === "\n") line++;
