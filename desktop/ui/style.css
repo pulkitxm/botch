@@ -1,0 +1,309 @@
+:root {
+  --bg: #000;
+  --surface: #161616;
+  --surface-hover: #262626;
+  --text: #f2f2f2;
+  --muted: #8a8a8a;
+  --accent: #4c8dff;
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font: 13px/1.4 system-ui, -apple-system, "Segoe UI", Ubuntu, sans-serif;
+  color: var(--text);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.pill {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg);
+  border-radius: 0 0 18px 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 40px;
+  padding: 6px 8px 0;
+}
+
+.tab-list {
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab-list::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 180px;
+  min-width: 90px;
+  height: 28px;
+  padding: 0 6px 0 10px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  cursor: default;
+  flex: 0 0 auto;
+}
+
+.tab.selected {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.tab-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tab.loading .tab-title {
+  font-style: italic;
+}
+
+.tab-close,
+.icon,
+.link,
+.chip {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tab-close {
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  padding: 0;
+  text-align: center;
+}
+
+.tab-close:hover,
+.icon:hover,
+.chip:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+.icon:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.chip {
+  height: 28px;
+  padding: 0 10px;
+  color: var(--text);
+  background: var(--surface);
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 4px 8px;
+}
+
+#address {
+  flex: 1;
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+#address:focus {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.content {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--surface);
+  overflow: auto;
+}
+
+.sheet {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.sheet h1 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sheet p {
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.profiles {
+  display: grid;
+  gap: 8px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile:hover {
+  background: var(--surface-hover);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+
+.profile-email {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--surface-hover);
+}
+
+.row select {
+  font: inherit;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.link {
+  color: var(--accent);
+  padding: 4px 8px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.status {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 8px 16px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.handle {
+  height: 10px;
+  display: grid;
+  place-items: center;
+  cursor: ns-resize;
+}
+
+.handle span {
+  width: 48px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-hover);
+}

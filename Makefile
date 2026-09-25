@@ -8,12 +8,12 @@ export DEVELOPER_DIR
 
 SWIFT_FILES := Sources Tests Package.swift
 SHELL_FILES := install.sh $(wildcard scripts/*.sh)
-WORKFLOWS := $(filter-out .github/workflows/release.yml,$(wildcard .github/workflows/*.yml))
+WORKFLOWS := $(wildcard .github/workflows/*.yml)
 BASE ?= $(shell git merge-base HEAD main 2>/dev/null || git merge-base HEAD origin/main 2>/dev/null)
 HEAD ?= HEAD
 BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 
-.PHONY: build test lint format app icon clean
+.PHONY: build test lint format app icon clean desktop-build desktop-test desktop-lint
 .PHONY: ci ci-tools ci-comments ci-emdash ci-attribution ci-commits ci-secrets ci-gitleaks
 .PHONY: ci-hygiene ci-plist ci-yaml ci-markdown ci-links ci-workflows ci-scripts ci-swift
 
@@ -39,6 +39,15 @@ icon:
 
 clean:
 	rm -rf .build dist
+
+desktop-build:
+	cd desktop && bun install --frozen-lockfile && bunx tauri build
+
+desktop-test:
+	cd desktop/src-tauri && cargo test --locked
+
+desktop-lint:
+	cd desktop/src-tauri && cargo fmt --check && cargo clippy --locked --all-targets -- -D warnings
 
 ci:
 	bun install --frozen-lockfile

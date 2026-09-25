@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Botch</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="pill" class="pill"><span class="pill-dot"></span>Botch</div>
+    <div id="panel" class="panel hidden">
+      <div class="tabs">
+        <div id="tabs" class="tab-list"></div>
+        <button id="new-tab" class="icon" title="New tab (Ctrl+T)">+</button>
+        <div class="spacer"></div>
+        <button id="profile-chip" class="chip hidden"></button>
+        <button id="settings-toggle" class="icon" title="Settings">&#8943;</button>
+      </div>
+      <div class="toolbar">
+        <button id="back" class="icon" title="Back">&#8592;</button>
+        <button id="forward" class="icon" title="Forward">&#8594;</button>
+        <button id="reload" class="icon" title="Reload">&#8635;</button>
+        <input id="address" type="text" spellcheck="false" autocomplete="off" placeholder="Search or enter address" />
+      </div>
+      <div class="content">
+        <div id="picker" class="sheet hidden">
+          <h1>Choose a Chrome profile</h1>
+          <p id="picker-message"></p>
+          <div id="profiles" class="profiles"></div>
+          <button id="download-chrome" class="link hidden">Download Chrome</button>
+        </div>
+        <div id="settings" class="sheet hidden">
+          <h1>Settings</h1>
+          <label class="row">
+            <span>Search engine</span>
+            <select id="engine"></select>
+          </label>
+          <div class="row">
+            <span id="settings-profile"></span>
+            <button id="detach" class="link">Detach profile</button>
+          </div>
+          <div class="row">
+            <span>Botch</span>
+            <button id="quit" class="link">Quit</button>
+          </div>
+        </div>
+        <p id="status" class="status"></p>
+      </div>
+      <div id="handle" class="handle"><span></span></div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
