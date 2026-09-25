@@ -151,3 +151,23 @@ dwell before any open is fixed at 100 ms (`NotchController.openDwell`).
 - Ad-hoc signed release build; no notarization.
 - Network pages (example.com, wikipedia, mdn, hacker news) were loaded live, so the five tab
   numbers depend on those pages on that day.
+
+## size optimization
+
+Release builds are optimized for size since v0.2.0. The macOS app builds with `-Osize` and
+`-dead_strip`, and `scripts/bundle.sh` strips symbols with `strip -rSTx`. The Linux and Windows
+edition uses `opt-level = "z"` and `panic = "abort"` on top of LTO, one codegen unit and
+`strip`. All 137 Swift tests pass on an `-Osize` release build and all 15 Rust tests pass on the
+size-optimized release profile.
+
+| item | v0.1.0 | size optimized | change | command |
+| --- | --- | --- | --- | --- |
+| macOS executable | 1,834,088 bytes | 681,584 bytes | -63% | `stat -f %z` |
+| macOS app bundle | 2.0 MB | 888 KB | -57% | `du -sh` |
+| Botch.zip | 666,902 bytes | 449,297 bytes | -33% | `stat -f %z` |
+| Botch.dmg | 1,056,639 bytes | 775,059 bytes | -27% | `stat -f %z` |
+| desktop executable (built on macOS) | 7,395,376 bytes | 3,523,152 bytes | -52% | `cargo build --release`, `stat -f %z` |
+
+The v0.1.0 macOS executable here is a local release build of the same source, 20 KB smaller than
+the CI build measured above. Memory, CPU and launch numbers were measured on v0.1.0; symbol
+stripping and size optimization do not change the code paths that run.
