@@ -22,9 +22,9 @@ with a Google Chrome profile. SwiftPM package, macOS 14+, Swift 6 toolchain in S
 - `make build`, `make test`, `make lint`, `make format`
 - `make app` builds, ad-hoc signs and packages `dist/Botch.app`, `Botch.zip` and `Botch.dmg`
 - `make icon` regenerates `Resources/AppIcon.icns` from `scripts/icon.swift`
-- `make desktop-lint`, `make desktop-test`, `make desktop-build` for `desktop/`; the
-  `Desktop` workflow runs them on Ubuntu and Windows, and `release.yml` uploads the `.deb`,
-  `.AppImage`, `.msi` and setup `.exe` to the tag's release after the macOS job creates it
+- `make desktop-lint`, `make desktop-test`, `make desktop-build` for `desktop/`; `ci.yml` runs
+  lint and tests on Linux and Windows, and `release.yml` builds the `.deb`, `.AppImage`, `.msi`
+  and setup `.exe` next to the macOS zip and dmg
 
 Building needs Xcode; the Makefile picks `/Applications/Xcode*.app` when `xcode-select` points
 at the command line tools.
@@ -44,9 +44,11 @@ at the command line tools.
 ## CI checks
 
 `make ci` runs every check below on macOS after `bun install --frozen-lockfile`; `make ci-tools`
-installs the missing binaries with Homebrew. GitHub Actions runs the same targets: `policy` on
-Ubuntu, `links` on `main` pushes and weekly, `swift` on macOS. Each check has its own target so
-a focused change can run one of them.
+installs the missing binaries with Homebrew. `ci.yml` runs the same targets: `Policy` on Ubuntu,
+`Links` on `main` pushes and weekly, `macOS` (Swift lint, build, test), and `Linux` and `Windows`
+(Rust format, clippy, test). `release.yml` runs on `v*` tags: one build job per platform, then
+`Publish` creates the GitHub release with all six files. Each check has its own target so a
+focused change can run one of them.
 
 - `ci-comments`: no comments in any code or config file (Swift, Rust, JS/TS, CSS, JSON, YAML,
   HTML, TOML, shell, Makefile). Only functional directives survive: shebangs,

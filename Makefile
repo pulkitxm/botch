@@ -85,7 +85,7 @@ ci-hygiene:
 	for f in $(SHELL_FILES); do bash -n "$$f"; done
 	grep -q 'curl -fsSL https://raw.githubusercontent.com/pulkitxm/botch/main/install.sh | bash' README.md
 	grep -q '^url="https://github.com/pulkitxm/botch/releases/latest/download/Botch.zip"$$' install.sh
-	@if command -v plutil >/dev/null; then $(MAKE) ci-plist; else echo "plutil unavailable, Info.plist lint runs in the swift job"; fi
+	@if command -v plutil >/dev/null; then $(MAKE) ci-plist; else echo "plutil unavailable, Info.plist lint runs in the macOS job"; fi
 
 ci-plist:
 	plutil -lint Resources/Info.plist
