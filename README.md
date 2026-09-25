@@ -59,9 +59,9 @@ raw numbers are in [docs/benchmarks.md](docs/benchmarks.md).
 
 | | Botch | Google Chrome |
 | --- | --- | --- |
-| app on disk | 888 KB | 2.1 GB |
-| download | 449 KB zip, 775 KB dmg | n/a |
-| executable | 682 KB, links only system frameworks | n/a |
+| app on disk | 920 KB | 2.1 GB |
+| download | 458 KB zip, 788 KB dmg | n/a |
+| executable | 717 KB, links only system frameworks | n/a |
 
 | state | memory (footprint) | CPU |
 | --- | --- | --- |
@@ -70,8 +70,10 @@ raw numbers are in [docs/benchmarks.md](docs/benchmarks.md).
 | open with five tabs | 191 MB with WebKit helpers | under 1% |
 | page scrolling continuously | n/a | 3.2% |
 
-Launch to a ready notch takes 174 ms (median of five warm launches). The Linux and Windows
-executable is 3.5 MB before packaging.
+Launch to a ready notch takes 174 ms (median of five warm launches).
+
+Linux and Windows downloads: 2.5 MB `.deb`, 1.6 MB setup `.exe`, 2.1 MB `.msi`. The AppImage is
+81 MB because it bundles WebKitGTK so it runs on any distro; prefer the `.deb` on Ubuntu.
 
 ## Linux and Windows
 
