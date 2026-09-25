@@ -7,35 +7,17 @@ on:
 permissions: {}
 
 jobs:
-  release:
-    runs-on: macos-26
-    timeout-minutes: 40
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - run: swift --version
-      - run: make test
-      - run: make app
-        env:
-          BOTCH_VERSION: ${{ github.ref_name }}
-      - run: gh release create "$TAG" dist/Botch.zip dist/Botch.dmg --title "Botch $TAG" --generate-notes
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
-
-  desktop:
+  build:
     name: ${{ matrix.name }}
-    needs: release
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     permissions:
-      contents: write
+      contents: read
     strategy:
       matrix:
         include:
+          - name: macOS
+            os: macos-26
           - name: Linux
             os: ubuntu-22.04
           - name: Windows
@@ -43,38 +25,72 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: desktop
+    env:
+      TAG: ${{ github.ref_name }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      - name: Build macOS app
+        if: runner.os == 'macOS'
+        run: |
+          make test
+          BOTCH_VERSION="$TAG" make app
+          mkdir -p assets
+          cp dist/Botch.zip dist/Botch.dmg assets/
+      - name: Bun
+        if: runner.os != 'macOS'
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: 1.4.2
           no-cache: true
-      - if: runner.os == 'Linux'
+      - name: Linux packages
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev \
             libxdo-dev patchelf build-essential libssl-dev file
-      - run: rustup toolchain install stable --profile minimal && rustup default stable
-      - run: bun install --frozen-lockfile
-      - run: bunx tauri build --config "{\"version\":\"${TAG#v}\"}"
-        env:
-          TAG: ${{ github.ref_name }}
-      - run: |
+      - name: Build desktop app
+        if: runner.os != 'macOS'
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+          cd desktop
+          bun install --frozen-lockfile
+          bunx tauri build --config "{\"version\":\"${TAG#v}\"}"
+          cd ..
           bundle=desktop/src-tauri/target/release/bundle
-          mkdir -p dist/desktop
+          mkdir -p assets
           if [ "$RUNNER_OS" = Linux ]; then
-            cp "$bundle"/deb/*.deb dist/desktop/Botch-linux-amd64.deb
-            cp "$bundle"/appimage/*.AppImage dist/desktop/Botch-linux-x86_64.AppImage
+            cp "$bundle"/deb/*.deb assets/Botch-linux-amd64.deb
+            cp "$bundle"/appimage/*.AppImage assets/Botch-linux-x86_64.AppImage
           else
-            cp "$bundle"/msi/*.msi dist/desktop/Botch-windows-x64.msi
-            cp "$bundle"/nsis/*.exe dist/desktop/Botch-windows-x64-setup.exe
+            cp "$bundle"/msi/*.msi assets/Botch-windows-x64.msi
+            cp "$bundle"/nsis/*.exe assets/Botch-windows-x64-setup.exe
           fi
-        working-directory: .
-      - run: gh release upload "$TAG" dist/desktop/* --clobber
-        working-directory: .
+      - name: Upload
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.name }}
+          path: assets/*
+          if-no-files-found: error
+
+  publish:
+    name: Publish
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Download
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: assets
+          merge-multiple: true
+      - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" assets/* --repo "$GITHUB_REPOSITORY" --title "Botch $TAG" --generate-notes

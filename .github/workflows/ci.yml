@@ -86,8 +86,8 @@ jobs:
           fail: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  swift:
-    name: Swift
+  macos:
+    name: macOS
     runs-on: macos-26
     timeout-minutes: 40
     permissions:
@@ -103,3 +103,37 @@ jobs:
         run: make ci-plist
       - name: Lint, build and test
         run: make ci-swift
+
+  desktop:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+          - name: Windows
+            os: windows-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: desktop/src-tauri
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Linux packages
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev \
+            libxdo-dev build-essential libssl-dev
+      - name: Rust
+        run: rustup toolchain install stable --profile minimal --component rustfmt,clippy && rustup default stable
+      - name: Format, lint and test
+        run: cargo fmt --check && cargo clippy --locked --all-targets -- -D warnings && cargo test --locked

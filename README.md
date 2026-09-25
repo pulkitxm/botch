@@ -52,6 +52,27 @@ from your login keychain and writes them into a WebKit data store under
 `~/Library/WebKit/com.pulkit.botch`. Nothing is uploaded anywhere and there is no telemetry.
 Detach Profile and Clear Data in the profile menu removes that store.
 
+## Benchmarks
+
+Measured on an M4 Pro MacBook Pro running macOS 27 with a mock Chrome profile. Full method and
+raw numbers are in [docs/benchmarks.md](docs/benchmarks.md).
+
+| | Botch | Google Chrome |
+| --- | --- | --- |
+| app on disk | 888 KB | 2.1 GB |
+| download | 449 KB zip, 775 KB dmg | n/a |
+| executable | 682 KB, links only system frameworks | n/a |
+
+| state | memory (footprint) | CPU |
+| --- | --- | --- |
+| idle, notch collapsed | 18 MB, no WebKit processes | 0.1 to 0.6% |
+| open on one page | 61 MB with WebKit helpers | 0.1 to 0.3% |
+| open with five tabs | 191 MB with WebKit helpers | under 1% |
+| page scrolling continuously | n/a | 3.2% |
+
+Launch to a ready notch takes 174 ms (median of five warm launches). The Linux and Windows
+executable is 3.5 MB before packaging.
+
 ## Linux and Windows
 
 Each release also carries a desktop edition built with Tauri from `desktop/`: a small black pill
