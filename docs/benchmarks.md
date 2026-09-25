@@ -14,7 +14,7 @@ BOTCH_MOCK_CHROME=/tmp/mock-chrome scripts/benchmark.sh
 ## machine
 
 | item | value | command |
-|---|---|---|
+| --- | --- | --- |
 | cpu | Apple M4 Pro (Mac16,7) | `sysctl -n machdep.cpu.brand_string`, `sysctl -n hw.model` |
 | memory | 24 GB | `sysctl -n hw.memsize` |
 | macos | 27.0 (26A428) | `sw_vers` |
@@ -23,10 +23,10 @@ BOTCH_MOCK_CHROME=/tmp/mock-chrome scripts/benchmark.sh
 ## sizes
 
 | item | value | command |
-|---|---|---|
+| --- | --- | --- |
 | app bundle | 2.0 MB (2032 KB on disk) | `du -sh`, `du -sk /Applications/Botch.app` |
 | executable | 1,854,992 bytes, arm64 only | `stat -f %z`, `lipo -archs` |
-| executable segments | __TEXT 671,744 bytes, __DATA 49,152 bytes | `size` |
+| executable segments | `__TEXT` 671,744 bytes, `__DATA` 49,152 bytes | `size` |
 | resources | 208 KB (AppIcon.icns) | `du -sh Contents/Resources` |
 | bundled frameworks | none (no Contents/Frameworks) | `ls Contents/Frameworks` |
 | linked system frameworks | 11: AppKit, CFNetwork, ColorSync, CoreFoundation, CoreGraphics, CryptoKit, Foundation, Security, ServiceManagement, SwiftUI, WebKit | `otool -L` |
@@ -45,24 +45,24 @@ RSS is `ps -o rss= -p <pid>`. The script was run twice (runs started 00:32 and 0
 shown. Helpers are the WebKit XPC processes that appeared after Botch launched (see caveats).
 
 | state | process | footprint run 1 (MB) | footprint run 2 (MB) | rss run 2 (MB) |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | idle collapsed, one saved tab, browser never opened | Botch | 18 | 18 | 61 |
-| | helpers | none | none | none |
-| | **total** | **18** | **18** | **61** |
+| n/a | helpers | none | none | none |
+| n/a | **total** | **18** | **18** | **61** |
 | browser open on example.com | Botch | 34 | 33 | 99 |
-| | GPU | 11 | 12 | 30 |
-| | WebContent | 10 | 12 | 32 |
-| | Networking | 5.7 | 5.7 | 18 |
-| | **total** | **60.7** | **62.7** | **179** |
+| n/a | GPU | 11 | 12 | 30 |
+| n/a | WebContent | 10 | 12 | 32 |
+| n/a | Networking | 5.7 | 5.7 | 18 |
+| n/a | **total** | **60.7** | **62.7** | **179** |
 | browser open with five tabs | Botch | 37 | 37 | 111 |
-| | 7 helpers (GPU, Networking, 5 WebContent) | 153.5 | 155 | 210 |
-| | **total** | **190.5** | **192** | **321** |
-| collapsed after five tabs, tabs kept alive | Botch | 37 | not measured | |
-| | 7 helpers | 159 | not measured | |
-| | **total** | **196** | not measured | |
+| n/a | 7 helpers (GPU, Networking, 5 WebContent) | 153.5 | 155 | 210 |
+| n/a | **total** | **190.5** | **192** | **321** |
+| collapsed after five tabs, tabs kept alive | Botch | 37 | not measured | n/a |
+| n/a | 7 helpers | 159 | not measured | n/a |
+| n/a | **total** | **196** | not measured | n/a |
 
-Five tab set: example.com, en.wikipedia.org/wiki/Notch, developer.mozilla.org/en-US/,
-www.wikipedia.org, news.ycombinator.com. Each state was measured 15 to 45 s after launch.
+Five tab set: `example.com`, `en.wikipedia.org/wiki/Notch`, `developer.mozilla.org/en-US/`,
+`www.wikipedia.org`, `news.ycombinator.com`. Each state was measured 15 to 45 s after launch.
 
 The idle footprint is 18 MB with `onboarded` already set in the mock defaults, so no window is
 shown. An earlier ad hoc measurement read 33 MB idle; the likely cause is the onboarding window
@@ -74,11 +74,11 @@ Each value is the second sample of `top -l 2 -s <window> -stats pid,cpu,command 
 average over the window where 100 means one core fully busy.
 
 | state | window | Botch | WebContent | GPU | Networking | total run 1 | total run 2 |
-|---|---|---|---|---|---|---|---|
-| idle collapsed | 60 s | 0.1 | | | | 0.6 | 0.1 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| idle collapsed | 60 s | 0.1 | none | none | none | 0.6 | 0.1 |
 | open and idle on example.com | 30 s | 0.1 | 0.0 | 0.0 | 0.0 | 0.3 | 0.1 |
 | page scrolling continuously | 30 s | 1.7 | 1.3 | 0.2 | 0.0 | 0.5 (not verified) | 3.2 |
-| collapsed after five tabs | 60 s | not measured | | | | | |
+| collapsed after five tabs | 60 s | not measured | n/a | n/a | n/a | n/a | n/a |
 
 Per-process columns are from run 2. The scrolling page is a local 400 paragraph page that scrolls
 itself by 6 px every 16 ms. In run 2 the page was confirmed to be served (HTTP 200 from the local
@@ -97,7 +97,7 @@ lists a window owned by the new pid at window level 33 (statusBar + 8, the colla
 panel), polled every 2 ms. The mock profile has one saved tab and the browser is not opened.
 
 | run | launch to notch panel (ms) |
-|---|---|
+| --- | --- |
 | warm 1 | 194 |
 | warm 2 | 174 |
 | warm 3 | 185 |
