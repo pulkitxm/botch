@@ -3,7 +3,7 @@ import { readFileSync, statSync } from "node:fs";
 import { BINARY_EXTENSIONS, readText, report, trackedFiles } from "./tracked.mjs";
 
 export const SIZE_LIMIT = 1024 * 1024;
-export const LARGE_FILE_ALLOWED = /^(Resources\/AppIcon\.icns|docs\/[^/]+\.png)$/;
+export const LARGE_FILE_ALLOWED = /^(Resources\/AppIcon\.icns|docs\/[^/]+\.png|desktop\/src-tauri\/icons\/.+)$/;
 export const EXECUTABLE_ALLOWED = /^(install\.sh|scripts\/[^/]+\.sh)$/;
 
 export function textFindings(file, text) {

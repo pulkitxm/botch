@@ -13,8 +13,8 @@ globs:
   - "**/*.md"
 
 ignores:
-  - .build/**
-  - .worktrees/**
-  - dist/**
-  - node_modules/**
-  - target/**
+  - "**/.build/**"
+  - "**/.worktrees/**"
+  - "**/dist/**"
+  - "**/node_modules/**"
+  - "**/target/**"

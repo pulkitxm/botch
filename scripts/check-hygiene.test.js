@@ -3,7 +3,7 @@ import { execSync } from "node:child_process";
 import { chmodSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { checkFiles, duplicateJSONKeys, plistFindings, textFindings } from "./check-hygiene.mjs";
+import { LARGE_FILE_ALLOWED, checkFiles, duplicateJSONKeys, plistFindings, textFindings } from "./check-hygiene.mjs";
 
 test("text findings cover whitespace, newlines, CRLF and BOM", () => {
   expect(textFindings("a.txt", "clean\nfile\n")).toEqual([]);
@@ -71,4 +71,9 @@ test("tracked files are checked for size, mode, binaries and duplicates", () => 
   } finally {
     process.chdir(previous);
   }
+});
+
+test("tauri icons may exceed the size limit while other desktop files may not", () => {
+  expect(LARGE_FILE_ALLOWED.test("desktop/src-tauri/icons/icon.icns")).toBe(true);
+  expect(LARGE_FILE_ALLOWED.test("desktop/src/main.js")).toBe(false);
 });
