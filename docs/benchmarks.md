@@ -171,3 +171,17 @@ size-optimized release profile.
 The v0.1.0 macOS executable here is a local release build of the same source, 20 KB smaller than
 the CI build measured above. Memory, CPU and launch numbers were measured on v0.1.0; symbol
 stripping and size optimization do not change the code paths that run.
+
+Published v0.2.0 release assets, built by CI (`gh release view v0.2.0 --json assets`):
+
+| asset | bytes |
+| --- | --- |
+| Botch.zip | 457,651 |
+| Botch.dmg | 787,786 |
+| Botch-linux-amd64.deb | 2,511,760 |
+| Botch-linux-x86_64.AppImage | 81,017,336 |
+| Botch-windows-x64.msi | 2,125,824 |
+| Botch-windows-x64-setup.exe | 1,587,905 |
+
+The CI-built macOS executable in v0.2.0 is 716,528 bytes and the app bundle 920 KB, slightly
+larger than the local build above. The AppImage bundles WebKitGTK and its dependencies.
