@@ -1,0 +1,8 @@
+no_progress = true
+max_retries = 5
+retry_wait_time = 5
+timeout = 30
+max_concurrency = 8
+accept = ["200..=206", "429"]
+exclude_path = [".build", ".worktrees", "dist", "node_modules", "target"]
+exclude = ["^http://127\\.0\\.0\\.1", "^http://localhost", "^https://github\\.com/pulkitxm/botch/releases/latest/download/"]
