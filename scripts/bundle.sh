@@ -8,14 +8,15 @@ ARCHS="${BOTCH_ARCHS:-arm64}"
 DIST="dist"
 APP="$DIST/Botch.app"
 
-arch_flags=()
-for arch in $ARCHS; do arch_flags+=(--arch "$arch"); done
-swift build -c release --product Botch "${arch_flags[@]}"
-BIN="$(swift build -c release --product Botch "${arch_flags[@]}" --show-bin-path)/Botch"
+build_flags=(-c release --product Botch -Xswiftc -Osize -Xlinker -dead_strip)
+for arch in $ARCHS; do build_flags+=(--arch "$arch"); done
+swift build "${build_flags[@]}"
+BIN="$(swift build "${build_flags[@]}" --show-bin-path)/Botch"
 
 rm -rf "$APP" "$DIST/dmg"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/Botch"
+strip -rSTx "$APP/Contents/MacOS/Botch"
 sed "s/__VERSION__/$VERSION/g" Resources/Info.plist > "$APP/Contents/Info.plist"
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 printf 'APPL????' > "$APP/Contents/PkgInfo"
