@@ -2,8 +2,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-VERSION="${BOTCH_VERSION#v}"
-VERSION="${VERSION:-0.0.0}"
+VERSION="${BOTCH_VERSION:-0.0.0}"
+VERSION="${VERSION#v}"
 ARCHS="${BOTCH_ARCHS:-arm64}"
 DIST="dist"
 APP="$DIST/Botch.app"
