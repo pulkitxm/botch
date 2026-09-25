@@ -13,7 +13,9 @@ ACTIVE_WINDOW="${BENCH_ACTIVE_WINDOW:-30}"
 BIN="$APP/Contents/MacOS/Botch"
 DEVELOPER_DIR="${DEVELOPER_DIR:-$(xcode-select -p 2>/dev/null)}"
 if [ ! -x "$DEVELOPER_DIR/usr/bin/xcodebuild" ]; then
-  DEVELOPER_DIR="$(ls -d /Applications/Xcode*.app/Contents/Developer 2>/dev/null | head -1)"
+  for candidate in /Applications/Xcode*.app/Contents/Developer; do
+    [ -x "$candidate/usr/bin/xcodebuild" ] && DEVELOPER_DIR="$candidate" && break
+  done
 fi
 export DEVELOPER_DIR
 export BOTCH_MOCK_CHROME="$MOCK"
@@ -120,7 +122,7 @@ phase_sizes() {
     say "| executable $arch | $(stat -f %z "$thin") bytes, $(size "$thin" | awk 'NR == 2 { print "__TEXT " $1 ", __DATA " $2 }') | lipo -thin, size |"
   done
   say "| resources | $(du -sh "$APP/Contents/Resources" | cut -f1) | du -sh |"
-  say "| bundled frameworks | $(ls "$APP/Contents/Frameworks" 2>/dev/null | wc -l | tr -d ' ') | ls Contents/Frameworks |"
+  say "| bundled frameworks | $(find "$APP/Contents/Frameworks" -mindepth 1 -maxdepth 1 2>/dev/null | wc -l | tr -d ' ') | ls Contents/Frameworks |"
   say "| system frameworks linked | $(otool -L "$BIN" | grep -c '/System/Library/Frameworks/') ($(otool -L "$BIN" | grep -o '/System/Library/Frameworks/[A-Za-z]*' | sed 's#.*/##' | tr '\n' ' ')) | otool -L |"
   say "| swift runtime dylibs linked | $(otool -L "$BIN" | grep -c '/usr/lib/swift/') | otool -L |"
   say "| code signature | $(codesign -dv "$APP" 2>&1 | grep -o 'Signature=.*') | codesign -dv |"
@@ -132,8 +134,12 @@ phase_sizes() {
     say "| zip binary matches installed | $([ "$(shasum -a 256 "$OUT/release/unzipped/Botch.app/Contents/MacOS/Botch" | cut -d' ' -f1)" = "$(shasum -a 256 "$BIN" | cut -d' ' -f1)" ] && echo yes || echo no) | shasum -a 256 |"
   fi
   say "" "### other browsers installed" "" "| app | size | version |" "|---|---|---|"
-  for app in /Applications/Google\ Chrome.app /System/Cryptexes/App/System/Applications/Safari.app \
-    $(ls -d /Applications/*.app 2>/dev/null | grep -iE 'arc|dia|firefox|brave|edge|orion|zen|chromium|opera|vivaldi'); do
+  for app in /Applications/*.app /System/Cryptexes/App/System/Applications/Safari.app; do
+    case "$(basename "$app")" in
+      "Google Chrome.app" | Safari.app | Arc.app | Dia.app | Chromium.app | Vivaldi.app) ;;
+      Firefox*.app | Brave*.app | "Microsoft Edge"*.app | Orion*.app | Zen*.app | Opera*.app) ;;
+      *) continue ;;
+    esac
     [ -d "$app" ] || continue
     say "| $(basename "$app") | $(du -sh "$app" 2>/dev/null | cut -f1) | $(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$app/Contents/Info.plist" 2>/dev/null) |"
   done
