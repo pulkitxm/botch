@@ -1,6 +1,6 @@
 import { commitMessages, lineOf, readText, report, trackedFiles } from "./tracked.mjs";
 
-export const EM_DASH = "—";
+export const EM_DASH = String.fromCharCode(0x2014);
 
 export function findEmDashes(text, label) {
   const findings = [];
