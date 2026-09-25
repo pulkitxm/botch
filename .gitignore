@@ -7,5 +7,4 @@ dist/
 .worktrees/
 node_modules/
 desktop/src-tauri/target/
-desktop/src-tauri/Cargo.lock
 desktop/src-tauri/gen/

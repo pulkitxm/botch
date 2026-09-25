@@ -54,9 +54,9 @@ jobs:
         run: cargo fmt --check
       - name: Clippy
         working-directory: desktop/src-tauri
-        run: cargo clippy --all-targets -- -D warnings
+        run: cargo clippy --locked --all-targets -- -D warnings
       - name: Test
         working-directory: desktop/src-tauri
-        run: cargo test
+        run: cargo test --locked
       - name: Build
         run: bunx tauri build

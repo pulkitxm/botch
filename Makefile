@@ -44,10 +44,10 @@ desktop-build:
 	cd desktop && bun install --frozen-lockfile && bunx tauri build
 
 desktop-test:
-	cd desktop/src-tauri && cargo test
+	cd desktop/src-tauri && cargo test --locked
 
 desktop-lint:
-	cd desktop/src-tauri && cargo fmt --check && cargo clippy --all-targets -- -D warnings
+	cd desktop/src-tauri && cargo fmt --check && cargo clippy --locked --all-targets -- -D warnings
 
 ci:
 	bun install --frozen-lockfile
