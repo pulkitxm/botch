@@ -45,7 +45,7 @@ impl Session {
 }
 
 pub fn path() -> Option<PathBuf> {
-    Some(dirs::config_dir()?.join("botch").join("session.json"))
+    Some(dirs::config_dir()?.join("botch-desktop.json"))
 }
 
 pub fn load() -> Session {
