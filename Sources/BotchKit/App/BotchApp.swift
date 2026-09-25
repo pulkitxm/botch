@@ -13,8 +13,10 @@ public final class BotchApp: NSObject, NSApplicationDelegate {
     private var settingsWindow: NSWindow?
 
     public override init() {
-        settings = BotchSettings()
-        browser = NotchBrowserStore(defaults: settings.defaults)
+        settings = BotchSettings(defaults: MockEnvironment.defaults ?? .standard)
+        browser =
+            MockEnvironment.browserStore(defaults: settings.defaults)
+            ?? NotchBrowserStore(defaults: settings.defaults)
         super.init()
     }
 
@@ -30,7 +32,20 @@ public final class BotchApp: NSObject, NSApplicationDelegate {
         settings.onChange = { [weak self] in self?.applySettings() }
         installStatusItem()
         applySettings()
-        if !settings.onboarded { showSettings() }
+        if let seconds = MockEnvironment.openSeconds {
+            scheduleMockRun(openFor: seconds)
+        } else if !settings.onboarded {
+            showSettings()
+        }
+    }
+
+    private func scheduleMockRun(openFor seconds: TimeInterval) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.controller?.openBrowser()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1 + seconds) { [weak self] in
+            self?.controller?.collapseNow()
+        }
     }
 
     public func applicationWillTerminate(_ notification: Notification) {

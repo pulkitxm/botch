@@ -27,4 +27,8 @@ at the command line tools.
 - `swift format lint --strict` must pass; run `make format` before committing.
 - Never read the real Chrome profile in tests. Use `SyntheticChrome` from the fixtures.
 - Keep the feature set as is: no extra notch widgets, no extensions, no main window.
-- Screenshots and evidence use mock data only.
+- Screenshots and evidence use mock data only. `BOTCH_SNAPSHOT_DIR=docs make test` renders
+  `docs/botch.png` from the real notch panel with mock pages. For a live run with mock data,
+  export a synthetic profile with `BOTCH_MOCK_CHROME_OUT=/tmp/mock-chrome make test`, then start
+  `dist/Botch.app/Contents/MacOS/Botch` with `BOTCH_MOCK_CHROME=/tmp/mock-chrome` and
+  optionally `BOTCH_MOCK_OPEN=<seconds>` to open the notch on launch and collapse it later.
