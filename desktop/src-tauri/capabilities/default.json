@@ -1,0 +1,7 @@
+{
+  "identifier": "chrome",
+  "description": "The browser chrome webview talks to the Rust shell",
+  "windows": ["notch"],
+  "webviews": ["chrome"],
+  "permissions": ["core:default"]
+}
