@@ -1,0 +1,27 @@
+extends: default
+
+ignore: |
+  .build/
+  .worktrees/
+  dist/
+  node_modules/
+  target/
+
+rules:
+  document-start: disable
+  line-length:
+    max: 120
+  truthy:
+    check-keys: false
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    max-spaces-inside: 1
+  brackets:
+    max-spaces-inside: 1
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  key-duplicates: enable
+  new-line-at-end-of-file: enable
+  trailing-spaces: enable
