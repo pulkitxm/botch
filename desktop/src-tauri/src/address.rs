@@ -94,14 +94,6 @@ pub fn direct_url(text: &str) -> Option<Url> {
     Url::parse(&format!("{scheme}://{text}")).ok()
 }
 
-pub fn display_text(url: &str) -> &str {
-    if url == "about:blank" {
-        ""
-    } else {
-        url
-    }
-}
-
 fn looks_like_host(text: &str) -> bool {
     let host = text
         .split('/')
@@ -187,7 +179,5 @@ mod tests {
                 format!("\"{}\"", engine.id())
             );
         }
-        assert_eq!(display_text("about:blank"), "");
-        assert_eq!(display_text("https://kagi.com/"), "https://kagi.com/");
     }
 }

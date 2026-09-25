@@ -66,6 +66,7 @@ pub fn now_unix() -> i64 {
         .unwrap_or_default()
 }
 
+#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
 pub fn needs_keyring_key(database: &Path) -> bool {
     let Ok(scratch) = Scratch::new() else {
         return false;
