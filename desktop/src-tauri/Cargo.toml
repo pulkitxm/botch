@@ -39,3 +39,5 @@ windows = { version = "0.62", features = ["Win32_Foundation", "Win32_Security_Cr
 strip = true
 lto = true
 codegen-units = 1
+opt-level = "z"
+panic = "abort"
