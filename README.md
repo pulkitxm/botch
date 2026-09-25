@@ -52,6 +52,26 @@ from your login keychain and writes them into a WebKit data store under
 `~/Library/WebKit/com.pulkit.botch`. Nothing is uploaded anywhere and there is no telemetry.
 Detach Profile and Clear Data in the profile menu removes that store.
 
+## Linux and Windows
+
+Each release also carries a desktop edition built with Tauri from `desktop/`: a small black pill
+docked at the top center of the screen that expands into the same tabbed browser on hover.
+
+- Ubuntu and Debian: download `Botch-linux-amd64.deb`, then
+  `sudo apt install ./Botch-linux-amd64.deb`.
+- Other distributions: download `Botch-linux-x86_64.AppImage`, run
+  `chmod +x Botch-linux-x86_64.AppImage` and start it.
+- Windows 10 and 11: run `Botch-windows-x64.msi` or `Botch-windows-x64-setup.exe`. The
+  installers are unsigned, so SmartScreen warns; choose More info, then Run anyway.
+
+The tray icon has Open, Settings and Quit. Only cookies are imported, from
+`~/.config/google-chrome` on Linux and `%LOCALAPPDATA%\Google\Chrome\User Data` on Windows.
+On Linux, cookies protected by the desktop keyring (`v11`) need an unlocked Secret Service
+keyring; the rest use Chrome's fixed fallback key. On Windows, cookies that Chrome 127 and later
+protect with app-bound encryption (`v20`) cannot be read by other apps and are skipped, and the
+import reports how many were skipped. Local storage, IndexedDB, passwords and extensions are not
+imported. On Wayland the window runs through XWayland so it can stay docked.
+
 ## Build from source
 
 ```sh
@@ -62,7 +82,8 @@ open dist/Botch.app
 ```
 
 Needs Xcode 26 or later. `make ci` runs the same lint, policy and test checks as CI; see
-`AGENTS.md` for the list.
+`AGENTS.md` for the list. The desktop edition builds with `make desktop-build`, which needs
+Rust, Bun and the Tauri system packages for your platform.
 
 ## Uninstall
 

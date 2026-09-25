@@ -11,12 +11,20 @@ with a Google Chrome profile. SwiftPM package, macOS 14+, Swift 6 toolchain in S
 - `Sources/BotchKit/App`: settings, onboarding and settings window, menu bar app delegate.
 - `Sources/Botch`: executable entry point.
 - `Tests/BotchTests`: Swift Testing suites with synthetic Chrome fixtures and a local HTTP server.
+- `desktop/`: the Linux and Windows edition, Tauri 2 with the CLI pinned in `package.json` and
+  run through `bunx tauri`. `src-tauri/src` holds the Rust shell (`shell.rs` window, tabs and
+  tray; `chrome.rs`, `cookies.rs`, `crypto.rs` profile and cookie import; `address.rs`,
+  `session.rs`), `ui/` is plain HTML, CSS and JS with no bundler. Each tab is a child webview
+  (Tauri `unstable` feature). Tests use synthetic databases and keys only.
 
 ## Commands
 
 - `make build`, `make test`, `make lint`, `make format`
 - `make app` builds, ad-hoc signs and packages `dist/Botch.app`, `Botch.zip` and `Botch.dmg`
 - `make icon` regenerates `Resources/AppIcon.icns` from `scripts/icon.swift`
+- `make desktop-lint`, `make desktop-test`, `make desktop-build` for `desktop/`; the
+  `Desktop` workflow runs them on Ubuntu and Windows, and `release.yml` uploads the `.deb`,
+  `.AppImage`, `.msi` and setup `.exe` to the tag's release after the macOS job creates it
 
 Building needs Xcode; the Makefile picks `/Applications/Xcode*.app` when `xcode-select` points
 at the command line tools.
@@ -60,7 +68,6 @@ a focused change can run one of them.
 - `ci-workflows`: `actionlint`, `zizmor --persona=pedantic --min-severity=medium` and
   `scripts/check-workflows.mjs`, which requires every `uses:` to be pinned to a 40-character SHA
   with a version comment, `permissions` and `timeout-minutes` on every job, and
-  `persist-credentials: false` on every checkout. `release.yml` is filtered out in the Makefile
-  until its findings are fixed.
+  `persist-credentials: false` on every checkout.
 - `ci-scripts`: `bun test scripts`, one test file per checker.
 - `ci-swift`: `swift format lint --strict`, `swift build` and `swift test`.
