@@ -75,7 +75,7 @@ stop_botch() {
 }
 
 footprint_mb() {
-  footprint "$1" 2>/dev/null | awk '/Footprint:/ { v = $(NF - 3); u = $(NF - 2);
+  footprint "$1" 2>/dev/null | awk '/Footprint:/ { for (i = 1; i < NF; i++) if ($i == "Footprint:") { v = $(i + 1); u = $(i + 2) }
     if (u == "KB") v /= 1024; if (u == "GB") v *= 1024; printf "%.1f", v; exit }'
 }
 
