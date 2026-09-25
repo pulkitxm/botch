@@ -5,3 +5,4 @@ dist/
 *.dmg
 *.zip
 .worktrees/
+node_modules/

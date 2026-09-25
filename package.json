@@ -1,0 +1,10 @@
+{
+  "name": "botch-tooling",
+  "private": true,
+  "scripts": {
+    "test": "bun test scripts"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "0.23.3"
+  }
+}
