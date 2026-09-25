@@ -61,7 +61,8 @@ make app
 open dist/Botch.app
 ```
 
-Needs Xcode 26 or later.
+Needs Xcode 26 or later. `make ci` runs the same lint, policy and test checks as CI; see
+`AGENTS.md` for the list.
 
 ## Uninstall
 

@@ -32,3 +32,35 @@ at the command line tools.
   export a synthetic profile with `BOTCH_MOCK_CHROME_OUT=/tmp/mock-chrome make test`, then start
   `dist/Botch.app/Contents/MacOS/Botch` with `BOTCH_MOCK_CHROME=/tmp/mock-chrome` and
   optionally `BOTCH_MOCK_OPEN=<seconds>` to open the notch on launch and collapse it later.
+
+## CI checks
+
+`make ci` runs every check below on macOS after `bun install --frozen-lockfile`; `make ci-tools`
+installs the missing binaries with Homebrew. GitHub Actions runs the same targets: `policy` on
+Ubuntu, `links` on `main` pushes and weekly, `swift` on macOS. Each check has its own target so
+a focused change can run one of them.
+
+- `ci-comments`: no comments in any code or config file (Swift, Rust, JS/TS, CSS, JSON, YAML,
+  HTML, TOML, shell, Makefile). Only functional directives survive: shebangs,
+  `// swift-tools-version`, `// swiftlint:`, `// swift-format-`, `biome-ignore`, `@ts-*`,
+  `eslint-*`, `/*! */` license blocks, `# shellcheck`, and the `# vX.Y.Z` marker after a SHA pin.
+- `ci-emdash`: no em-dash character in any tracked text file. `ci-commits` applies the same rule
+  to commit messages on the branch.
+- `ci-attribution`: no AI attribution in files, commit messages or branch names (no
+  `Co-Authored-By` trailers, no vendor or tool names, no `ai/` or similar branch prefixes).
+- `ci-secrets`: gitleaks over the history plus a pattern scan for private keys, vendor tokens
+  and high-entropy assignments.
+- `ci-hygiene`: no trailing whitespace, LF endings with one final newline, no files over 1 MB
+  except the app icon and `docs/*.png`, executable bit only on `install.sh` and `scripts/*.sh`,
+  no duplicate JSON keys, `shellcheck -S style` and `bash -n` on every shell script, the README
+  install one-liner and `install.sh` download URL, and `ci-plist` (`plutil -lint` plus
+  `LSUIElement` and `NSAllowsArbitraryLoadsInWebContent` set to true).
+- `ci-yaml`, `ci-markdown`, `ci-links`: `yamllint --strict`, `markdownlint-cli2` and `lychee`
+  with the configs at the repository root.
+- `ci-workflows`: `actionlint`, `zizmor --persona=pedantic --min-severity=medium` and
+  `scripts/check-workflows.mjs`, which requires every `uses:` to be pinned to a 40-character SHA
+  with a version comment, `permissions` and `timeout-minutes` on every job, and
+  `persist-credentials: false` on every checkout. `release.yml` is filtered out in the Makefile
+  until its findings are fixed.
+- `ci-scripts`: `bun test scripts`, one test file per checker.
+- `ci-swift`: `swift format lint --strict`, `swift build` and `swift test`.
