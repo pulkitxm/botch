@@ -13,18 +13,15 @@ struct NotchContentView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .top) {
-                Color.black
-                layers
-                    .scaleEffect(
-                        x: 1 / hoverScale.width, y: 1 / hoverScale.height, anchor: .center)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .mask {
                 CenteredNotchShape(
                     width: shapeSize.width, height: shapeSize.height,
-                    topRadius: topRadius, bottomRadius: bottomRadius)
+                    topRadius: topRadius, bottomRadius: bottomRadius
+                )
+                .fill(.black)
+                .scaleEffect(x: hoverScale.width, y: hoverScale.height, anchor: .top)
+                layers
             }
-            .scaleEffect(x: hoverScale.width, y: hoverScale.height, anchor: .top)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .animation(glide, value: isExpanded)
             .animation(glide, value: isHovering)
             .onContinuousHover { phase in
@@ -96,7 +93,7 @@ struct NotchContentView: View {
     private var contentTransition: AnyTransition {
         guard !reduceMotion else { return .opacity }
         return .asymmetric(
-            insertion: .opacity.animation(.easeOut(duration: 0.12)),
-            removal: .opacity.animation(.easeOut(duration: 0.06)))
+            insertion: .opacity.animation(.easeOut(duration: 0.1).delay(0.12)),
+            removal: .identity)
     }
 }
